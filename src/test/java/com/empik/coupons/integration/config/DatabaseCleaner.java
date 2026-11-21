@@ -1,4 +1,4 @@
-package com.empik.coupons;
+package com.empik.coupons.integration.config;
 
 import com.empik.coupons.repositories.CouponRepository;
 import com.empik.coupons.repositories.CouponUsageRepository;
