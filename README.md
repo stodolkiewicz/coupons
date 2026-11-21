@@ -2,6 +2,10 @@
 
 REST service for creating and redeeming discount coupons.
 
+## Database schema
+
+![Database schema](docs/images/db_schema.png)
+
 ## Development
 
 Requires JDK 25 and Docker.
@@ -15,5 +19,25 @@ Postgres starts automatically in Docker from `compose.yaml`.
 
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### Useful commands
+
+Run unit tests:
+
+```bash
+./mvnw test
+```
+
+Run unit and integration tests (classes ending with `IT`):
+
+```bash
+./mvnw verify
+```
+
+Remove the Postgres container together with its data:
+
+```bash
+docker compose down -v
 ```
 
