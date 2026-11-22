@@ -26,7 +26,7 @@ class CouponMapperTest {
 		);
 
 		// when
-		Coupon coupon = mapper.toEntity(1
+		Coupon coupon = mapper.toEntity(
 				request,
 				CREATED_AT
 		);

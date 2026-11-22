@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/coupons")
-public class CouponController {
+public class CouponController implements CouponApi {
 
 	private final CouponService couponService;
 	private final CouponMapper couponMapper;
@@ -27,6 +27,7 @@ public class CouponController {
 		this.couponMapper = couponMapper;
 	}
 
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public CouponResponse createCoupon(@Valid @RequestBody CreateCouponRequest request) {

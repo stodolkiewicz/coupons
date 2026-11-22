@@ -1,3 +1,10 @@
 spring:
   liquibase:
     contexts: prod
+
+# The OpenAPI document and Swagger UI are for development only.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

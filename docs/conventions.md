@@ -1,5 +1,22 @@
 # Conventions
 
+## OpenAPI documentation
+
+springdoc-openapi generates the OpenAPI document at `/v3/api-docs` and serves Swagger UI at `/swagger-ui.html`.
+`application-prod.yaml` turns both off, so the `prod` profile serves no API documentation.
+`OpenApiConfig` sets the title, version and description of the API.
+
+Each controller implements an interface named `<Resource>Api`, for example `CouponController` implements `CouponApi`.
+The interface holds only the OpenAPI annotations: `@Tag`, `@Operation` and one `@ApiResponse` for every possible status code.
+The controller holds the Spring MVC annotations, for example `@PostMapping`, `@Valid` and `@RequestBody`.
+springdoc reads the OpenAPI annotations from the interface methods.
+
+Every field of a request or response DTO has `@Schema` with a `description` and an `example`.
+springdoc adds the Bean Validation rules, for example `@Size` and `@Pattern`, to the schema itself.
+A custom constraint such as `@IsoCountryCode` is invisible to springdoc, so `@Schema` describes it.
+
+Error responses use the media type `application/problem+json` and the schema `ProblemDetail`.
+
 ## Mapping
 
 MapStruct mappers in `com.empik.coupons.mappers` convert between DTOs and entities.
