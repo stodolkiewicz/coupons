@@ -1,4 +1,4 @@
-package com.empik.coupons.integration.config;
+package com.empik.coupons.integration.liquibase.config;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

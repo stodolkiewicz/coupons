@@ -1,8 +1,8 @@
-package com.empik.coupons.integration;
+package com.empik.coupons.integration.liquibase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.empik.coupons.integration.config.PostgresIntegrationTestBase;
+import com.empik.coupons.integration.liquibase.config.PostgresIntegrationTestBase;
 import com.empik.coupons.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,7 +22,11 @@ class LiquibaseContextIT {
 		@Test
 		@DisplayName("The dev profile runs all DDL and DML changesets, so the test user is inserted")
 		void givenDevProfile_liquibaseMigrationShouldExecuteDevContextChangesets() {
-			assertThat(userRepository.count()).isGreaterThan(0);
+			// when
+			long userCount = userRepository.count();
+
+			// then
+			assertThat(userCount).isGreaterThan(0);
 		}
 
 	}
@@ -37,7 +41,11 @@ class LiquibaseContextIT {
 		@Test
 		@DisplayName("The prod profile runs only DDL changesets, so no test user is inserted")
 		void givenProdProfile_liquibaseMigrationShouldExecuteOnlyProdContextChangesets() {
-			assertThat(userRepository.count()).isZero();
+			// when
+			long userCount = userRepository.count();
+
+			// then
+			assertThat(userCount).isZero();
 		}
 
 	}

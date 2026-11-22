@@ -1,4 +1,4 @@
-package com.empik.coupons.integration;
+package com.empik.coupons.integration.liquibase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,6 +43,7 @@ class LiquibaseRollbackIT {
 	void givenEmptyDatabase_eachChangesetRollbackShouldRestorePreviousState() throws Exception {
 		int appliedChangesets = 0;
 		while (true) {
+			// given
 			String stateBeforeUpdate = dumpDatabase();
 			runOneLiquibaseChangeset();
 			int appliedAfterUpdate = countAppliedChangesets();
@@ -51,7 +52,10 @@ class LiquibaseRollbackIT {
 				break;
 			}
 
+			// when
 			rollbackOneLiquibaseChangeset();
+
+			// then
 			assertThat(dumpDatabase())
 					.as("Database state after the rollback of changeset number %d", appliedAfterUpdate)
 					.isEqualTo(stateBeforeUpdate);
@@ -60,6 +64,8 @@ class LiquibaseRollbackIT {
 			runOneLiquibaseChangeset();
 			appliedChangesets = appliedAfterUpdate;
 		}
+
+		// then
 		assertThat(appliedChangesets).isPositive();
 	}
 

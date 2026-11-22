@@ -41,7 +41,7 @@ public class Coupon {
 	) {
 		this.id = UUID.randomUUID();
 		this.code = code.toUpperCase(Locale.ROOT);
-		this.countryCode = countryCode;
+		this.countryCode = countryCode.toUpperCase(Locale.ROOT);
 		this.maxUses = maxUses;
 		this.currentUses = 0;
 		this.createdAt = createdAt;

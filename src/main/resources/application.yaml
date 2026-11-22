@@ -3,3 +3,9 @@ spring:
     name: empik
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
+
+coupons:
+  db:
+    constraints:
+      # Name of the unique constraint on coupon.code, defined in 0002-create-coupon.sql.
+      coupon-code-unique: uq_coupon_code

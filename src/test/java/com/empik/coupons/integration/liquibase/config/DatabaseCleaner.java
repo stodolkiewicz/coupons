@@ -1,4 +1,4 @@
-package com.empik.coupons.integration.config;
+package com.empik.coupons.integration.liquibase.config;
 
 import com.empik.coupons.repositories.CouponRepository;
 import com.empik.coupons.repositories.CouponUsageRepository;
