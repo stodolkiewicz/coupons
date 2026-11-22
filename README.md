@@ -6,6 +6,10 @@ REST service for creating and redeeming discount coupons.
 
 ![Database schema](docs/images/db_schema.png)
 
+## Conventions
+
+[docs/conventions.md](docs/conventions.md) describes how the project uses mappers and how tests are written and organized.
+
 ## Development
 
 Requires JDK 25 and Docker.
