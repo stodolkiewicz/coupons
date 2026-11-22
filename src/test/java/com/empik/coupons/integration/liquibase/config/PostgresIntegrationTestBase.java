@@ -15,8 +15,9 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
  * {@link DirtiesContext} closes the Spring context after each class,
  * because the cached context would point to the stopped container.
  * Before each test method, {@link DatabaseCleaner} deletes the data of the previous method.
+ * The tests use the DB-IP Lite file from the repository and never download a new one.
  */
-@SpringBootTest
+@SpringBootTest(properties = "coupons.geoip.download.enabled=false")
 @Testcontainers
 @DirtiesContext
 @Import(DatabaseCleaner.class)

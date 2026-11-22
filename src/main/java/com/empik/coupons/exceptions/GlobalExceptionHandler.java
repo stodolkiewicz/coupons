@@ -35,6 +35,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	/**
+	 * The DB-IP Lite file cannot be read, so the fault is on the server side.
+	 * The response hides the exception message, because it names the internal file.
+	 */
+	@ExceptionHandler(GeoIpLookupException.class)
+	public ProblemDetail handleGeoIpLookup(
+			GeoIpLookupException exception,
+			HttpServletRequest request
+	) {
+		log.error(
+				"Country lookup failed on {} {}",
+				request.getMethod(),
+				request.getRequestURI(),
+				exception
+		);
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+		problem.setTitle("Country lookup failed");
+		problem.setDetail("The country of the IP address cannot be determined.");
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
+	/**
 	 * Handles every exception that no other handler matches.
 	 * The response hides the exception message, because it can contain internal details.
 	 */

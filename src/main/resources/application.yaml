@@ -9,3 +9,12 @@ coupons:
     constraints:
       # Name of the unique constraint on coupon.code, defined in 0002-create-coupon.sql.
       coupon-code-unique: uq_coupon_code
+  geoip:
+    # Directory with the DB-IP Lite file. The application needs write access to it.
+    directory: geoip
+    download:
+      enabled: true
+      base-url: https://download.db-ip.com/free
+      timeout: 60s
+      # Daily check in UTC. A download happens only when the file of the current month is missing.
+      cron: "0 0 4 * * *"

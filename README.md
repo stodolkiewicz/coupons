@@ -8,6 +8,16 @@ REST service for creating and redeeming discount coupons.
 
 [docs/database-schema.md](docs/database-schema.md) describes the tables, columns and constraints.
 
+## IP geolocation
+
+The service finds the country of an IP address in the DB-IP Lite database file `geoip/dbip-country-lite-YYYY-MM.mmdb`.
+The repository contains the file, so the service works right after cloning.
+DB-IP publishes a new file every month, usually on the 1st.
+Every day at 04:00 UTC and at startup, the service downloads the file of the current month when it is missing and deletes the older file.
+The `coupons.geoip` properties in `application.yaml` configure the directory and the download.
+
+[IP Geolocation by DB-IP](https://db-ip.com) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
 ## Development
 
 Requires JDK 25 and Docker.
@@ -31,7 +41,7 @@ The `prod` profile turns both off.
 
 ### Conventions
 
-[docs/conventions.md](docs/conventions.md) describes how the project documents the API with OpenAPI, how it uses mappers and how tests are written and organized.
+[docs/conventions.md](docs/conventions.md) describes how the project documents the API with OpenAPI, names methods, handles exceptions, uses mappers and writes and organizes tests.
 
 ### Useful commands
 

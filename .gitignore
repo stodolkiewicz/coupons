@@ -34,3 +34,6 @@ build/
 
 ### Recruitment task ###
 task.md
+
+### DB-IP Lite download in progress ###
+geoip/*.download

@@ -17,6 +17,17 @@ A custom constraint such as `@IsoCountryCode` is invisible to springdoc, so `@Sc
 
 Error responses use the media type `application/problem+json` and the schema `ProblemDetail`.
 
+## Naming
+
+A method name states exactly what the method does and which object it works on, for example `loadDbIpLiteDatabaseIntoMemory(Path dbIpLiteFile)` instead of `load(Path file)`.
+A parameter name states which object it holds in the same way.
+
+## Exceptions
+
+Custom exceptions live in `com.empik.coupons.exceptions` and extend `RuntimeException`.
+Every custom exception has its own `@ExceptionHandler` method in `GlobalExceptionHandler`.
+The handler returns a `ProblemDetail` with a title, a detail and the request details from `addRequestDetails`.
+
 ## Mapping
 
 MapStruct mappers in `com.empik.coupons.mappers` convert between DTOs and entities.
@@ -39,6 +50,8 @@ Tests live in `src/test/java/com/empik/coupons/`:
 | `unit.mappers`            | MapStruct mappers. Each mapper method has a unit test.                        |
 | `unit.services`           | Services. Mockito mocks the repositories.                                     |
 | `unit.validation`         | Custom Bean Validation constraints, for example `@IsoCountryCode`.            |
+| `unit.exceptions`         | Handler methods of `GlobalExceptionHandler`, called directly with `MockHttpServletRequest`. |
+| `unit.geoip`              | Country lookup and download of the DB-IP Lite file. A local HTTP server plays the DB-IP server. |
 | `integration.api`         | REST endpoints. A request goes through all layers down to Postgres.           |
 | `integration.liquibase`   | Liquibase migrations, contexts and rollbacks.                                 |
 | `integration.config`      | Shared setup for integration tests: `PostgresIntegrationTestBase` and `DatabaseCleaner`. |

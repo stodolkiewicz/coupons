@@ -8,7 +8,7 @@ The criteria define what makes an ADR good.
 
 - ADRs live in `docs/decisions/`.
 - The file name is `NNNN-title-with-dashes.md`. `NNNN` is the next free number, padded to four digits.
-- The title is lowercase words joined with dashes, for example `0003-use-uuid-primary-keys.md`.
+- The title is lowercase words joined with dashes, for example `0003-primary-key-type.md`.
 
 ## Template
 
@@ -18,7 +18,7 @@ status: {proposed | accepted | rejected | deprecated | superseded by ADR-NNNN}
 date: {YYYY-MM-DD}
 ---
 
-# {Short title that names the problem and the chosen solution}
+# {Short title that names the decision to make, not the chosen option}
 
 ## Context and Problem Statement
 

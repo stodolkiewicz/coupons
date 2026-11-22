@@ -3,7 +3,7 @@ status: accepted
 date: 2026-11-21
 ---
 
-# Redeem coupons with an atomic conditional UPDATE in PostgreSQL
+# Concurrency control of the coupon usage limit
 
 ## Context and Problem Statement
 
