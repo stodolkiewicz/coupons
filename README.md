@@ -4,24 +4,23 @@ REST service for creating and redeeming discount coupons.
 
 ## How it works
 
-A coupon has a code, a country, a maximum number of uses, a current number of uses and a creation time.
+The service lets you create discount coupons and lets users redeem them.
 
-**Creating a coupon.** `POST /api/v1/coupons` creates a coupon.
-The service stores the code in uppercase, so `WIOSNA` and `wiosna` are the same code.
-A second coupon with the same code returns 409.
+**Create a coupon** with `POST /api/v1/coupons`. You choose a code, a country and how many times the coupon can be used.
+Letter case in the code does not matter: `WIOSNA` and `wiosna` are the same coupon.
 
-**Using a coupon.** `POST /api/v1/coupons/{code}/usages` with a user id records that the user used the coupon.
-The service accepts the use only when all of these conditions hold:
+**Redeem a coupon** with `POST /api/v1/coupons/{code}/usages` and the id of the user. The service checks the request before it accepts it:
 
-- The coupon exists. Otherwise the service returns 404.
-- The user exists. Otherwise the service returns 404.
-- The country of the client IP address is known and equals the country of the coupon. Otherwise the service returns 403.
-- The user has not used this coupon before. Otherwise the service returns 409.
-- The coupon has not reached its maximum number of uses. Otherwise the service returns 409.
+| Check | Answer when the check fails |
+|---|---|
+| Does the coupon exist? | 404 |
+| Does the user exist? | 404 |
+| Does the request come from the coupon's country? The service reads the country from the client IP address. | 403 |
+| Has the user already used this coupon? | 409 |
+| Are there any uses left? | 409 |
 
-The service finds the country of the client IP address in a local geolocation database, described in [IP geolocation](#ip-geolocation).
-Uses are first come, first served: one conditional `UPDATE` increments the counter only below the limit, so concurrent requests never exceed it.
-[docs/decisions/](docs/decisions/) explains this and other design decisions.
+When many users redeem the same coupon at the same time, the first ones win and the coupon is never used more times than allowed.
+[docs/decisions/](docs/decisions/) explains how the service guarantees this and why it looks up countries in a local file.
 
 ## Database schema
 
@@ -61,6 +60,21 @@ The OpenAPI document is available at http://localhost:8080/v3/api-docs.
 The `prod` profile turns both off.
 
 <img src="docs/images/openapi.png" alt="Swagger UI" width="70%">
+
+### Postman collection
+
+[coupons.postman_collection.json](coupons.postman_collection.json) holds example requests to the application running locally on port 8080 with the `dev` profile.
+Import it in Postman with **File → Import**.
+
+The collection creates a coupon for Poland and uses it from Poland by two users and from the USA by one user.
+The requests use the two users that the `dev` profile inserts and set the client IP address in the `X-Forwarded-For` header:
+
+| `X-Forwarded-For` | Country |
+|---|---|
+| `83.0.0.1` | Poland (`PL`) |
+| `8.8.8.8` | USA (`US`) |
+
+<img src="docs/images/postman.png" alt="Coupon redemption in Postman" width="70%">
 
 ### Health checks
 
