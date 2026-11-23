@@ -59,7 +59,7 @@ Swagger UI is available at http://localhost:8080/swagger-ui.html while the appli
 The OpenAPI document is available at http://localhost:8080/v3/api-docs.
 The `prod` profile turns both off.
 
-<img src="docs/images/openapi.png" alt="Swagger UI" width="70%">
+<img src="docs/images/openapi.png" alt="Swagger UI" width="90%">
 
 ### Postman collection
 
@@ -74,7 +74,7 @@ The requests use the two users that the `dev` profile inserts and set the client
 | `83.0.0.1` | Poland (`PL`) |
 | `8.8.8.8` | USA (`US`) |
 
-<img src="docs/images/postman.png" alt="Coupon redemption in Postman" width="70%">
+<img src="docs/images/postman.png" alt="Coupon redemption in Postman" width="90%">
 
 ### Health checks
 
@@ -95,7 +95,7 @@ sum(rate(http_server_requests_milliseconds_sum{service_name="empik"}[5m]))
 sum(rate(http_server_requests_milliseconds_count{service_name="empik"}[5m]))
 ```
 
-<img src="docs/images/avg_response_time_metric.png" alt="Average response time in Grafana" width="70%">
+<img src="docs/images/avg_response_time_metric.png" alt="Average response time in Grafana" width="90%">
 
 ### Conventions
 
