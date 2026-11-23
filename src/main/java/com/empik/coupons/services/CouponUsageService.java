@@ -15,12 +15,15 @@ import com.empik.coupons.repositories.UserRepository;
 import java.net.InetAddress;
 import java.time.Instant;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class CouponUsageService {
 
@@ -57,19 +60,45 @@ public class CouponUsageService {
 			InetAddress clientIp
 	) {
 		String normalizedCouponCode = couponCode.toUpperCase(Locale.ROOT);
-		Coupon coupon = couponRepository.findByCode(normalizedCouponCode)
-				.orElseThrow(() -> new CouponNotFoundException(normalizedCouponCode));
+		Optional<Coupon> foundCoupon = couponRepository.findByCode(normalizedCouponCode);
+		if (foundCoupon.isEmpty()) {
+			logRejectedCouponRedemption(
+					normalizedCouponCode,
+					userId,
+					"the coupon does not exist"
+			);
+			throw new CouponNotFoundException(normalizedCouponCode);
+		}
+		Coupon coupon = foundCoupon.get();
 		if (!userRepository.existsById(userId)) {
+			logRejectedCouponRedemption(
+					coupon.getCode(),
+					userId,
+					"the user does not exist"
+			);
 			throw new UserNotFoundException(userId);
 		}
 
-		String clientCountryCode = ipCountryResolver.resolveCountryCode(clientIp)
-				.orElseThrow(() -> new ClientCountryUnknownException(clientIp));
-		if (!clientCountryCode.equals(coupon.getCountryCode())) {
+		// The log never contains the client IP address, because it is personal data.
+		Optional<String> clientCountryCode = ipCountryResolver.resolveCountryCode(clientIp);
+		if (clientCountryCode.isEmpty()) {
+			logRejectedCouponRedemption(
+					coupon.getCode(),
+					userId,
+					"the country of the client IP address is unknown"
+			);
+			throw new ClientCountryUnknownException(clientIp);
+		}
+		if (!clientCountryCode.get().equals(coupon.getCountryCode())) {
+			logRejectedCouponRedemption(
+					coupon.getCode(),
+					userId,
+					"the request comes from " + clientCountryCode.get() + " instead of " + coupon.getCountryCode()
+			);
 			throw new CouponCountryNotAllowedException(
 					coupon.getCode(),
 					coupon.getCountryCode(),
-					clientCountryCode
+					clientCountryCode.get()
 			);
 		}
 
@@ -79,9 +108,19 @@ public class CouponUsageService {
 		);
 
 		if (couponRepository.incrementCurrentUsesIfBelowMaxUses(coupon.getId()) == 0) {
+			logRejectedCouponRedemption(
+					coupon.getCode(),
+					userId,
+					"the coupon has reached its maximum number of uses"
+			);
 			throw new CouponExhaustedException(coupon.getCode());
 		}
 
+		log.info(
+				"User {} used coupon {}",
+				userId,
+				coupon.getCode()
+		);
 		return couponUsage;
 	}
 
@@ -100,13 +139,33 @@ public class CouponUsageService {
 			throw ConstraintViolationDetector.translateViolationOfConstraint(
 					e,
 					couponUsageCouponUserUniqueConstraint,
-					() -> new CouponAlreadyUsedByUserException(
-							coupon.getCode(),
-							userId,
-							e
-					)
+					() -> {
+						logRejectedCouponRedemption(
+								coupon.getCode(),
+								userId,
+								"the user has already used the coupon"
+						);
+						return new CouponAlreadyUsedByUserException(
+								coupon.getCode(),
+								userId,
+								e
+						);
+					}
 			);
 		}
+	}
+
+	private static void logRejectedCouponRedemption(
+			String couponCode,
+			UUID userId,
+			String reason
+	) {
+		log.info(
+				"Rejected use of coupon {} by user {}: {}",
+				couponCode,
+				userId,
+				reason
+		);
 	}
 
 }

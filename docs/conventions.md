@@ -28,6 +28,12 @@ Custom exceptions live in `com.empik.coupons.exceptions` and extend `RuntimeExce
 Every custom exception has its own `@ExceptionHandler` method in `GlobalExceptionHandler`.
 The handler returns a `ProblemDetail` with a title, a detail and the request details from `addRequestDetails`.
 
+## Logging
+
+Services log every business event at INFO, for example a created coupon, a used coupon and a rejected use with its reason.
+A log line names the coupon code and the user id, never the client IP address, because the IP address is personal data.
+The `prod` profile writes logs as JSON in the Elastic Common Schema (`logging.structured.format.console: ecs`).
+
 ## Mapping
 
 MapStruct mappers in `com.empik.coupons.mappers` convert between DTOs and entities.

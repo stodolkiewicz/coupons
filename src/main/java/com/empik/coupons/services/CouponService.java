@@ -6,11 +6,13 @@ import com.empik.coupons.exceptions.CouponCodeAlreadyExistsException;
 import com.empik.coupons.mappers.CouponMapper;
 import com.empik.coupons.repositories.CouponRepository;
 import java.time.Instant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class CouponService {
 
@@ -39,18 +41,32 @@ public class CouponService {
 				request,
 				Instant.now()
 		);
+		Coupon savedCoupon;
 		try {
-			return couponRepository.saveAndFlush(coupon);
+			savedCoupon = couponRepository.saveAndFlush(coupon);
 		} catch (DataIntegrityViolationException e) {
 			throw ConstraintViolationDetector.translateViolationOfConstraint(
 					e,
 					couponCodeUniqueConstraint,
-					() -> new CouponCodeAlreadyExistsException(
-							coupon.getCode(),
-							e
-					)
+					() -> {
+						log.info(
+								"Rejected creation of coupon {}: the code already exists",
+								coupon.getCode()
+						);
+						return new CouponCodeAlreadyExistsException(
+								coupon.getCode(),
+								e
+						);
+					}
 			);
 		}
+		log.info(
+				"Created coupon {} for country {} with {} max uses",
+				savedCoupon.getCode(),
+				savedCoupon.getCountryCode(),
+				savedCoupon.getMaxUses()
+		);
+		return savedCoupon;
 	}
 
 }

@@ -8,3 +8,12 @@ springdoc:
     enabled: false
   swagger-ui:
     enabled: false
+
+# Writes each log line as one JSON object.
+# Spring Boot has 3 formats: ecs (Elastic), gelf (Graylog) and logstash.
+# The log stack on prod is not known yet, and many tools understand ecs.
+logging:
+  structured:
+    format:
+      # TODO: to be decided on prod, depending on the log stack.
+      console: ecs

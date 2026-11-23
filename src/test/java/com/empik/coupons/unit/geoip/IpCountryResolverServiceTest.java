@@ -65,6 +65,30 @@ class IpCountryResolverServiceTest {
 	}
 
 	@Test
+	void givenDirectoryWithFile_shouldReportDbIpLiteDatabaseLoaded() {
+		// given
+		IpCountryResolverService ipCountryResolverService = new IpCountryResolverService(new IpCountryResolverProperties(REPOSITORY_GEOIP_DIRECTORY));
+
+		// when
+		boolean loaded = ipCountryResolverService.isDbIpLiteDatabaseLoadedIntoMemory();
+
+		// then
+		assertThat(loaded).isTrue();
+	}
+
+	@Test
+	void givenEmptyDirectory_shouldReportDbIpLiteDatabaseNotLoaded(@TempDir Path directory) {
+		// given
+		IpCountryResolverService ipCountryResolverService = new IpCountryResolverService(new IpCountryResolverProperties(directory));
+
+		// when
+		boolean loaded = ipCountryResolverService.isDbIpLiteDatabaseLoadedIntoMemory();
+
+		// then
+		assertThat(loaded).isFalse();
+	}
+
+	@Test
 	void givenFileLoadedAfterStart_shouldResolveCountryFromIt(@TempDir Path directory) throws IOException {
 		// given
 		IpCountryResolverService ipCountryResolverService = new IpCountryResolverService(new IpCountryResolverProperties(directory));

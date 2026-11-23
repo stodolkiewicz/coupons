@@ -39,9 +39,15 @@ Swagger UI is available at http://localhost:8080/swagger-ui.html while the appli
 The OpenAPI document is available at http://localhost:8080/v3/api-docs.
 The `prod` profile turns both off.
 
+### Health checks
+
+`/actuator/health/liveness` reports whether the application is running.
+`/actuator/health/readiness` reports whether the application can serve requests. It reports DOWN while no DB-IP Lite file is loaded.
+Kubernetes can use them as the liveness and readiness probes.
+
 ### Conventions
 
-[docs/conventions.md](docs/conventions.md) describes how the project documents the API with OpenAPI, names methods, handles exceptions, uses mappers and writes and organizes tests.
+[docs/conventions.md](docs/conventions.md) describes how the project documents the API with OpenAPI, names methods, handles exceptions, logs, uses mappers and writes and organizes tests.
 
 ### Useful commands
 

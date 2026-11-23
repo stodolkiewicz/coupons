@@ -60,6 +60,10 @@ public class IpCountryResolverService implements IpCountryResolver {
 		);
 	}
 
+	public boolean isDbIpLiteDatabaseLoadedIntoMemory() {
+		return reader.get() != null;
+	}
+
 	@Override
 	public Optional<String> resolveCountryCode(InetAddress ip) {
 		DatabaseReader currentReader = reader.get();

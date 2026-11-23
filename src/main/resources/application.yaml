@@ -2,6 +2,22 @@ server:
   # Tomcat reads X-Forwarded-For only from trusted proxies (server.tomcat.remoteip.internal-proxies, private networks by default).
   forward-headers-strategy: native
 
+management:
+  endpoints:
+    web:
+      exposure:
+        # Exposes only /actuator/health and its liveness and readiness groups.
+        include: health
+  endpoint:
+    health:
+      probes:
+        # Serves /actuator/health/liveness and /actuator/health/readiness also outside Kubernetes.
+        enabled: true
+      group:
+        readiness:
+          # The pod is ready only when it accepts traffic and has the DB-IP Lite file loaded.
+          include: readinessState,dbIpDatabase
+
 spring:
   application:
     name: empik
