@@ -3,3 +3,16 @@ spring:
     contexts: dev
     # Drops all database objects at every startup, so Liquibase creates the schema and the dev data from scratch.
     drop-first: true
+
+management:
+  otlp:
+    metrics:
+      export:
+        # Sends metrics to the grafana/otel-lgtm container from compose.yaml.
+        enabled: true
+        # Sends metrics every 10 seconds instead of every minute, so the dashboard updates quickly.
+        step: 10s
+  tracing:
+    sampling:
+      # Records every request, instead of the default 10%, so every request has a trace in Tempo.
+      probability: 1.0

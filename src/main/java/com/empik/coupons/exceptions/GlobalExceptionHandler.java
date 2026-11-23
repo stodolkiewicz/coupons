@@ -60,6 +60,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return problem;
 	}
 
+	@ExceptionHandler(InvalidClientIpAddressException.class)
+	public ProblemDetail handleInvalidClientIpAddress(
+			InvalidClientIpAddressException exception,
+			HttpServletRequest request
+	) {
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+		problem.setTitle("Invalid client IP address");
+		problem.setDetail(exception.getMessage());
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
 	@ExceptionHandler(ClientCountryUnknownException.class)
 	public ProblemDetail handleClientCountryUnknown(
 			ClientCountryUnknownException exception,

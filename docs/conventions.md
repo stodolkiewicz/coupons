@@ -60,6 +60,7 @@ Tests live in `src/test/java/com/empik/coupons/`:
 | `unit.exceptions`         | Handler methods of `GlobalExceptionHandler`, called directly with `MockHttpServletRequest`. |
 | `unit.geoip`              | Country lookup and download of the DB-IP Lite file. A local HTTP server plays the DB-IP server. |
 | `integration.api`         | REST endpoints. A request goes through all layers down to Postgres.           |
+| `integration.database`    | Database settings applied to every connection, for example the timeouts from `spring.datasource.hikari`. |
 | `integration.repositories` | Custom repository queries, for example the conditional `UPDATE` of `current_uses`. |
 | `integration.liquibase`   | Liquibase migrations, contexts and rollbacks.                                 |
 | `integration.liquibase.config` | Shared setup for integration tests: `PostgresIntegrationTestBase` and `DatabaseCleaner`. |

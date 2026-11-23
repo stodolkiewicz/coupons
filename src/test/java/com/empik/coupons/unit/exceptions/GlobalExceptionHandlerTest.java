@@ -9,6 +9,7 @@ import com.empik.coupons.exceptions.CouponExhaustedException;
 import com.empik.coupons.exceptions.CouponNotFoundException;
 import com.empik.coupons.exceptions.GeoIpLookupException;
 import com.empik.coupons.exceptions.GlobalExceptionHandler;
+import com.empik.coupons.exceptions.InvalidClientIpAddressException;
 import com.empik.coupons.exceptions.UserNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -90,6 +91,24 @@ class GlobalExceptionHandlerTest {
 		assertThat(problem.getStatus()).isEqualTo(404);
 		assertThat(problem.getTitle()).isEqualTo("User not found");
 		assertThat(problem.getProperties()).containsEntry("userId", USER_ID);
+		assertThat(problem.getInstance()).isEqualTo(URI.create(USAGES_URI));
+	}
+
+	@Test
+	void givenInvalidClientIpAddressException_shouldReturnBadRequest() {
+		// when
+		ProblemDetail problem = handler.handleInvalidClientIpAddress(
+				new InvalidClientIpAddressException(
+						"not-an-ip",
+						new IllegalArgumentException("invalid literal")
+				),
+				request
+		);
+
+		// then
+		assertThat(problem.getStatus()).isEqualTo(400);
+		assertThat(problem.getTitle()).isEqualTo("Invalid client IP address");
+		assertThat(problem.getDetail()).isEqualTo("The client IP address not-an-ip is not a valid IP address.");
 		assertThat(problem.getInstance()).isEqualTo(URI.create(USAGES_URI));
 	}
 

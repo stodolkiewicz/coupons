@@ -17,10 +17,22 @@ management:
         readiness:
           # The pod is ready only when it accepts traffic and has the DB-IP Lite file loaded.
           include: readinessState,dbIpDatabase
+  otlp:
+    metrics:
+      export:
+        # The metrics backend on prod is not known yet. The dev profile turns the export on.
+        enabled: false
 
 spring:
   application:
     name: empik
+  datasource:
+    hikari:
+      # Maximum time in milliseconds a request waits for a free connection from the pool (default 30000).
+      connection-timeout: 2000
+      # Postgres cancels any SQL statement that runs longer than 5s, also while it waits for the lock on a coupon row.
+      # Liquibase uses the same connections, so a migration statement must also finish within 5s.
+      connection-init-sql: SET statement_timeout = '5s'
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
 

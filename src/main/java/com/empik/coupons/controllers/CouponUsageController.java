@@ -2,6 +2,7 @@ package com.empik.coupons.controllers;
 
 import com.empik.coupons.dtos.CouponUsageResponse;
 import com.empik.coupons.dtos.RedeemCouponRequest;
+import com.empik.coupons.exceptions.InvalidClientIpAddressException;
 import com.empik.coupons.mappers.CouponUsageMapper;
 import com.empik.coupons.services.CouponUsageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +34,6 @@ public class CouponUsageController implements CouponUsageApi {
 	/**
 	 * {@link HttpServletRequest#getRemoteAddr()} returns the client IP address.
 	 * Behind a trusted proxy, Tomcat takes it from X-Forwarded-For ({@code server.forward-headers-strategy: native}).
-	 * {@link InetAddress#ofLiteral(String)} parses the address without a DNS lookup.
 	 */
 	@Override
 	@PostMapping
@@ -46,8 +46,23 @@ public class CouponUsageController implements CouponUsageApi {
 		return couponUsageMapper.toResponse(couponUsageService.redeemCouponForUser(
 				code,
 				request.userId(),
-				InetAddress.ofLiteral(httpRequest.getRemoteAddr())
+				parseClientIpAddress(httpRequest.getRemoteAddr())
 		));
+	}
+
+	/**
+	 * {@link InetAddress#ofLiteral(String)} parses the address without a DNS lookup.
+	 * Tomcat copies X-Forwarded-For from a trusted proxy without checking it, so the value can be malformed.
+	 */
+	private static InetAddress parseClientIpAddress(String clientIpAddress) {
+		try {
+			return InetAddress.ofLiteral(clientIpAddress);
+		} catch (IllegalArgumentException e) {
+			throw new InvalidClientIpAddressException(
+					clientIpAddress,
+					e
+			);
+		}
 	}
 
 }

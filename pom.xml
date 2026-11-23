@@ -37,6 +37,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		<!-- Creates traces and sends traces and metrics over OTLP, locally to the grafana/otel-lgtm container. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-opentelemetry</artifactId>
+		</dependency>
 		<!-- Serves the health endpoints for Kubernetes liveness and readiness probes. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

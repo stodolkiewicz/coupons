@@ -7,3 +7,15 @@ services:
       POSTGRES_PASSWORD: coupons
     ports:
       - "5433:5432"
+
+  # Grafana with Prometheus (metrics), Tempo (traces) and Loki (logs) in one container, for local development only.
+  # Spring Boot recognizes the image name and sends metrics and traces to it over OTLP.
+  lgtm:
+    image: grafana/otel-lgtm:0.41.1
+    ports:
+      # Grafana UI, login admin/admin.
+      - "3000:3000"
+      # OTLP over gRPC.
+      - "4317:4317"
+      # OTLP over HTTP.
+      - "4318:4318"

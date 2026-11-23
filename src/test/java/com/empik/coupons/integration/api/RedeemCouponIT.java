@@ -261,6 +261,32 @@ class RedeemCouponIT extends PostgresIntegrationTestBase {
 	}
 
 	@Test
+	void givenMalformedClientIpAddress_shouldReturnBadRequest() {
+		// given
+		User user = userRepository.save(new User(
+				"Jan",
+				"Kowalski"
+		));
+
+		// when
+		MvcTestResult result = mvc.post()
+				.uri("/api/v1/coupons/WIOSNA/usages")
+				.remoteAddress("not-an-ip")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{"userId": "%s"}
+						""".formatted(user.getId()))
+				.exchange();
+
+		// then
+		assertThat(result)
+				.hasStatus(HttpStatus.BAD_REQUEST)
+				.bodyJson()
+				.extractingPath("$.title")
+				.isEqualTo("Invalid client IP address");
+	}
+
+	@Test
 	void givenMissingUserId_shouldReturnBadRequest() {
 		// when
 		MvcTestResult result = mvc.post()

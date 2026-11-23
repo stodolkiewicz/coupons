@@ -41,7 +41,7 @@ public interface CouponUsageApi {
 	)
 	@ApiResponse(
 			responseCode = "400",
-			description = "The request body is malformed or a field is invalid. For invalid fields, the errors property lists them.",
+			description = "The request body is malformed, a field is invalid, or the client IP address from X-Forwarded-For is not a valid IP address. For invalid fields, the errors property lists them.",
 			content = @Content(
 					mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
 					schema = @Schema(implementation = ProblemDetail.class)
