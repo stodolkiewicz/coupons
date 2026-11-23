@@ -2,7 +2,7 @@ package com.empik.coupons.unit.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.empik.coupons.validation.IsoCountryCodeValidator;
+import com.empik.coupons.dtos.validation.IsoCountryCodeValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

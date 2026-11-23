@@ -1,6 +1,6 @@
 package com.empik.coupons.dtos;
 
-import com.empik.coupons.validation.IsoCountryCode;
+import com.empik.coupons.dtos.validation.IsoCountryCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

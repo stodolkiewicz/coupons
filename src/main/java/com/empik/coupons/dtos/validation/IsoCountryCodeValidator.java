@@ -1,4 +1,4 @@
-package com.empik.coupons.validation;
+package com.empik.coupons.dtos.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

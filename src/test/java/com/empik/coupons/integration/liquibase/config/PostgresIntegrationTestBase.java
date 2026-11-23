@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -14,10 +15,12 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
  * Starts a new Postgres container for each test class.
  * {@link DirtiesContext} closes the Spring context after each class,
  * because the cached context would point to the stopped container.
+ * The test profile makes Liquibase run only the DDL changesets, so the tables start empty.
  * Before each test method, {@link DatabaseCleaner} deletes the data of the previous method.
  * The tests use the DB-IP Lite file from the repository and never download a new one.
  */
 @SpringBootTest(properties = "coupons.geoip.download.enabled=false")
+@ActiveProfiles("test")
 @Testcontainers
 @DirtiesContext
 @Import(DatabaseCleaner.class)
@@ -32,7 +35,7 @@ public abstract class PostgresIntegrationTestBase {
 
 	@BeforeEach
 	void cleanDatabase() {
-		databaseCleaner.cleanCouponTables();
+		databaseCleaner.deleteAllCouponUsagesCouponsAndUsers();
 	}
 
 }

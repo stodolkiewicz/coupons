@@ -6,7 +6,6 @@ import com.empik.coupons.exceptions.CouponCodeAlreadyExistsException;
 import com.empik.coupons.mappers.CouponMapper;
 import com.empik.coupons.repositories.CouponRepository;
 import java.time.Instant;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -43,19 +42,15 @@ public class CouponService {
 		try {
 			return couponRepository.saveAndFlush(coupon);
 		} catch (DataIntegrityViolationException e) {
-			if (violatesConstraint(e, couponCodeUniqueConstraint)) {
-				throw new CouponCodeAlreadyExistsException(coupon.getCode(), e);
-			}
-			throw e;
+			throw ConstraintViolationDetector.translateViolationOfConstraint(
+					e,
+					couponCodeUniqueConstraint,
+					() -> new CouponCodeAlreadyExistsException(
+							coupon.getCode(),
+							e
+					)
+			);
 		}
-	}
-
-	private static boolean violatesConstraint(
-			DataIntegrityViolationException exception,
-			String constraintName
-	) {
-		return exception.getCause() instanceof ConstraintViolationException violation
-				&& constraintName.equalsIgnoreCase(violation.getConstraintName());
 	}
 
 }

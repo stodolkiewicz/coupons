@@ -50,11 +50,13 @@ Tests live in `src/test/java/com/empik/coupons/`:
 | `unit.mappers`            | MapStruct mappers. Each mapper method has a unit test.                        |
 | `unit.services`           | Services. Mockito mocks the repositories.                                     |
 | `unit.validation`         | Custom Bean Validation constraints, for example `@IsoCountryCode`.            |
+| `unit.dtos`               | Boundary values of the Bean Validation constraints on request DTOs, checked with `jakarta.validation.Validator`. |
 | `unit.exceptions`         | Handler methods of `GlobalExceptionHandler`, called directly with `MockHttpServletRequest`. |
 | `unit.geoip`              | Country lookup and download of the DB-IP Lite file. A local HTTP server plays the DB-IP server. |
 | `integration.api`         | REST endpoints. A request goes through all layers down to Postgres.           |
+| `integration.repositories` | Custom repository queries, for example the conditional `UPDATE` of `current_uses`. |
 | `integration.liquibase`   | Liquibase migrations, contexts and rollbacks.                                 |
-| `integration.config`      | Shared setup for integration tests: `PostgresIntegrationTestBase` and `DatabaseCleaner`. |
+| `integration.liquibase.config` | Shared setup for integration tests: `PostgresIntegrationTestBase` and `DatabaseCleaner`. |
 
 ### Unit and integration tests
 
@@ -65,10 +67,14 @@ Unit tests run without Spring and without a database.
 An integration test class name ends with `IT`.
 Integration tests run against Postgres in a Testcontainers container.
 `./mvnw verify` runs them together with the unit tests.
-[src/test/java/com/empik/coupons/integration/README.md](../src/test/java/com/empik/coupons/integration/README.md) describes how the containers and data cleanup work.
+[src/test/java/com/empik/coupons/integration/liquibase/README.md](../src/test/java/com/empik/coupons/integration/liquibase/README.md) describes how the containers and data cleanup work.
 
+An integration test runs with the `test` profile, so Liquibase creates only the tables and the test inserts its own data.
 An API test extends `PostgresIntegrationTestBase` and has `@AutoConfigureMockMvc`.
 It sends requests through `MockMvcTester`, so no HTTP server starts.
+
+A repository test has `@DataJpaTest` and `@AutoConfigureTestDatabase(replace = NONE)` and starts its own Postgres container with `@ServiceConnection` and has `@ActiveProfiles("test")`.
+`@DataJpaTest` starts only JPA, the repositories and Liquibase, and rolls back each test method.
 
 ### Test method structure
 

@@ -34,6 +34,86 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return problem;
 	}
 
+	@ExceptionHandler(CouponNotFoundException.class)
+	public ProblemDetail handleCouponNotFound(
+			CouponNotFoundException exception,
+			HttpServletRequest request
+	) {
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+		problem.setTitle("Coupon not found");
+		problem.setDetail(exception.getMessage());
+		problem.setProperty("couponCode", exception.getCode());
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
+	@ExceptionHandler(UserNotFoundException.class)
+	public ProblemDetail handleUserNotFound(
+			UserNotFoundException exception,
+			HttpServletRequest request
+	) {
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+		problem.setTitle("User not found");
+		problem.setDetail(exception.getMessage());
+		problem.setProperty("userId", exception.getUserId());
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
+	@ExceptionHandler(ClientCountryUnknownException.class)
+	public ProblemDetail handleClientCountryUnknown(
+			ClientCountryUnknownException exception,
+			HttpServletRequest request
+	) {
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+		problem.setTitle("Country cannot be determined");
+		problem.setDetail(exception.getMessage());
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
+	@ExceptionHandler(CouponCountryNotAllowedException.class)
+	public ProblemDetail handleCouponCountryNotAllowed(
+			CouponCountryNotAllowedException exception,
+			HttpServletRequest request
+	) {
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+		problem.setTitle("Country not allowed");
+		problem.setDetail(exception.getMessage());
+		problem.setProperty("couponCode", exception.getCode());
+		problem.setProperty("couponCountryCode", exception.getCouponCountryCode());
+		problem.setProperty("clientCountryCode", exception.getClientCountryCode());
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
+	@ExceptionHandler(CouponAlreadyUsedByUserException.class)
+	public ProblemDetail handleCouponAlreadyUsedByUser(
+			CouponAlreadyUsedByUserException exception,
+			HttpServletRequest request
+	) {
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+		problem.setTitle("Coupon already used by user");
+		problem.setDetail(exception.getMessage());
+		problem.setProperty("couponCode", exception.getCode());
+		problem.setProperty("userId", exception.getUserId());
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
+	@ExceptionHandler(CouponExhaustedException.class)
+	public ProblemDetail handleCouponExhausted(
+			CouponExhaustedException exception,
+			HttpServletRequest request
+	) {
+		ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+		problem.setTitle("Coupon exhausted");
+		problem.setDetail(exception.getMessage());
+		problem.setProperty("couponCode", exception.getCode());
+		addRequestDetails(problem, request);
+		return problem;
+	}
+
 	/**
 	 * The DB-IP Lite file cannot be read, so the fault is on the server side.
 	 * The response hides the exception message, because it names the internal file.

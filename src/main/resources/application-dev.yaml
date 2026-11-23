@@ -1,3 +1,5 @@
 spring:
   liquibase:
     contexts: dev
+    # Drops all database objects at every startup, so Liquibase creates the schema and the dev data from scratch.
+    drop-first: true

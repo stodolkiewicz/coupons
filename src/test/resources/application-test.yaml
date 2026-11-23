@@ -1,0 +1,4 @@
+spring:
+  liquibase:
+    # Runs only the DDL changesets, so tests start with empty tables and create their own data.
+    contexts: test

@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset dawid:0002-create-coupon context:dev,prod
+--changeset dawid:0002-create-coupon context:dev,prod,test
 CREATE TABLE coupon (
     id           UUID        NOT NULL,
     code         VARCHAR(64) NOT NULL,

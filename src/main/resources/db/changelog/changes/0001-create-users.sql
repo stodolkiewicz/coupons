@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset dawid:0001-create-users context:dev,prod
+--changeset dawid:0001-create-users context:dev,prod,test
 CREATE TABLE users (
     id         UUID         NOT NULL,
     version    BIGINT       NOT NULL,

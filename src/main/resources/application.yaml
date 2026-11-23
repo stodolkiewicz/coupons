@@ -1,3 +1,7 @@
+server:
+  # Tomcat reads X-Forwarded-For only from trusted proxies (server.tomcat.remoteip.internal-proxies, private networks by default).
+  forward-headers-strategy: native
+
 spring:
   application:
     name: empik
@@ -9,6 +13,8 @@ coupons:
     constraints:
       # Name of the unique constraint on coupon.code, defined in 0002-create-coupon.sql.
       coupon-code-unique: uq_coupon_code
+      # Name of the unique constraint on coupon_usage (coupon_id, user_id), defined in 0003-create-coupon-usage.sql.
+      coupon-usage-coupon-user-unique: uq_coupon_usage_coupon_user
   geoip:
     # Directory with the DB-IP Lite file. The application needs write access to it.
     directory: geoip
